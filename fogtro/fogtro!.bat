@@ -1,0 +1,3 @@
+@echo off
+
+fogtro!.exe

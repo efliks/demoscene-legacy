@@ -1,0 +1,2 @@
+
+SHIFT_CONST equ 12
