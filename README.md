@@ -1,5 +1,4 @@
 # dos-gfx
-<img src="./gallery.png" alt="dos-gfx mosaic" width="400" />
 
 Here is a collection of 30+ graphical effects, intros and games, 
 written originally for MS-DOS.
@@ -32,8 +31,9 @@ just fine.
 
 ## Running programs in the protected mode
 
-Some programs, both Assembler (*fogtro*, *3dfontz*) and C (*wheel2*),
-were written in the protected mode of DOS and require a DOS extender.
+Some programs, both Assembler (*fogtro*, *3dfontz*) and C (*wheel2*,
+*flatgrd2*), were written in the protected mode of DOS and require
+a DOS extender.
 
 Download the CWSDPMI extender from 
 [here](https://web.archive.org/web/20151217064947/http://homer.rice.edu/~sandmann/cwsdpmi/index.html).
