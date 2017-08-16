@@ -29,11 +29,10 @@ was originally done on a Pentium 133 MHz, any computer will do
 just fine.
 
 
-## Running programs in the protected mode
+## Running programs in protected mode
 
 Some programs, both Assembler (*fogtro*, *3dfontz*) and C (*wheel2*,
-*flatgrd2*), were written in the protected mode of DOS and require
-a DOS extender.
+*flatgrd2*), were written in protected mode and require a DOS extender.
 
 Download the CWSDPMI extender from 
 [here](https://web.archive.org/web/20151217064947/http://homer.rice.edu/~sandmann/cwsdpmi/index.html).
