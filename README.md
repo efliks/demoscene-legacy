@@ -88,7 +88,7 @@ dosbox> c:\tasm\bin\tasm.exe b_line.asm
 The above command will generate a "b\_line.com" executable that is ready
 to run. Note the Microsoft-style backslashes.
 
-Programs written for the protected mode have in general 
+Programs written for protected mode have in general 
 a BAT file with compilation instructions in it. The file is 
 usually called "\_make.bat". I managed to build *fogtro* in 
 the following way:
