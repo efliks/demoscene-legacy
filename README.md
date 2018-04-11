@@ -1,4 +1,5 @@
 # dos-gfx
+<img src="./sample.png" alt="Sample image" width="600" />
 
 Here is a collection of 30+ graphical effects, intros and games, 
 written originally for MS-DOS.
@@ -121,6 +122,6 @@ they may still have some educational, fun or nostalgy value for some
 people.
 
 For any questions, please feel free to contact me by e-mail: 
-<mikolaj [dot] feliks [at] gmail [dot] com>.
+\<<mikolaj.feliks@gmail.com>\>.
 I am the only developer of the programs. Licensing information can be 
 found in COPYING.
