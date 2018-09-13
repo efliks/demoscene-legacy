@@ -2,14 +2,15 @@
 <img src="./sample.png" alt="Sample image" width="600" />
 
 Back in the early 2000s, I was part of a Polish online group of
-Assembler enthusiasts called New Age Assembler Group (NAAG, 
-now defunct). Some of our works made it to the broader demoscene. 
+Assembler enthusiasts called New Age Assembler Group or NAAG 
+(now defunct). Some of our works made it to the broader demoscene. 
 For example, in June 2002 we released a zin (in Polish) that can 
 be found [here](http://www.pouet.net/prod.php?which=50666).
 
-Here is a collection of 30+ graphical effects, intros and games, 
-written originally for MS-DOS. Some of these effects were published 
-on [Demozoo](https://demozoo.org/sceners/70017/), a demoscene site.
+Here is a collection of graphical effects, intros and games, 
+written originally for MS-DOS in Assembler and C. Some of these 
+effects were published on [Demozoo](https://demozoo.org/sceners/70017/), 
+a demoscene site.
 
 
 ## Running programs in a DOS emulator
