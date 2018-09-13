@@ -4,7 +4,7 @@
 Back in the early 2000s, I was part of a Polish online group of
 Assembler enthusiasts called New Age Assembler Group or NAAG 
 (now defunct). Some of our works made it to the broader demoscene. 
-For example, in June 2002 we released a zin (in Polish) that can 
+For example, in June 2002 we released our only zine that can still
 be found [here](http://www.pouet.net/prod.php?which=50666).
 
 Here is a collection of graphical effects, intros and games, 
