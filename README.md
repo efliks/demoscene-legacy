@@ -1,5 +1,6 @@
-# demoscene-legacy
 <img src="./sample.png" alt="Sample image" width="750" />
+
+# demoscene-legacy
 
 Back in the early 2000s, I was part of a Polish online group of
 Assembler enthusiasts called New Age Assembler Group or NAAG 
