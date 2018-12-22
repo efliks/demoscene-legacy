@@ -1,5 +1,5 @@
 # demoscene-legacy
-<img src="./sample.png" alt="Sample image" width="600" />
+<img src="./sample.png" alt="Sample image" width="750" />
 
 Back in the early 2000s, I was part of a Polish online group of
 Assembler enthusiasts called New Age Assembler Group or NAAG 
@@ -16,8 +16,8 @@ a demoscene site.
 ## Running programs in a DOS emulator
 
 Despite DOS being long gone, it is quite easy to run the programs in
-an emulator, such as [DOSBox](http://www.dosbox.com/). If you are 
-under Linux, enter each program's directory and type in, for example:
+an emulator, such as [DOSBox](http://www.dosbox.com/). Under Linux, 
+enter each program's directory and type in, for example:
 
 ```
 linux> dosbox 3DFLAG.COM
@@ -31,8 +31,8 @@ Usually, the programs will run very slow. It is possible to accelerate
 them to some degree by repeatedly pressing [CTRL+SHIFT+F12], 
 which will increase the number of "cycles" in DOSBox.
 
-If you want to run them at original speed, it might be necessary 
-to set up a dedicated old computer with something like
+To run them at their original speed, it might be necessary to set up 
+a dedicated old computer with something like
 [FreeDOS](http://www.freedos.org/) on board. Since the development 
 was originally done on a Pentium 133 MHz, any computer will do 
 just fine.
