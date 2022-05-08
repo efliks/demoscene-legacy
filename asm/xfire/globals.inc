@@ -1,13 +1,3 @@
-MAX_COLORS  equ     255
-
-global  copy_screen_buffer:PROC
-global  clear_screen_buffer:PROC
-global  alloc_screen_buffer:PROC
-global  free_screen_buffer:PROC
-global  wait_for_frame:PROC
-global  buffer_seg:WORD
-
-
 _TEXT   segment byte    public  'CODE'
 _TEXT   ends
 _DATA   segment word    public  'DATA'

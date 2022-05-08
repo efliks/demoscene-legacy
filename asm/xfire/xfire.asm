@@ -1,9 +1,9 @@
-; Mikolaj Felix 1/05/2001
-; mfelix@polbox.com
+; Originally written 1/05/2001
 
 title 'xfire.asm', 'Fire simulation'
 
 include globals.inc
+include graphlib.inc
 
 
 _STACK  segment
@@ -11,9 +11,10 @@ _STACK  segment
     EndStack    LABEL  BYTE
 _STACK  ends
 
+
 _DATA   segment
 include fire_pal.inc
-random_seed  dw  1111h
+random_seed     dw  1111h
 
 _DATA   ends
 
@@ -36,8 +37,8 @@ xfire_start:
     ;    initialize
     mov     dx, DGROUP
 
-    call    alloc_screen_buffer
-    call    clear_screen_buffer
+    call    alloc_screen
+    call    clear_screen
 
     mov     ax, 13h
     int     10h
@@ -58,14 +59,14 @@ xfire_start:
 main_loop:
     call    burn
     call    wait_for_frame
-    call    copy_screen_buffer
+    call    copy_screen
     in      al, 60h
     dec     al
     jnz     main_loop
 
     mov     ax, 03h
     int     10h
-    call    free_screen_buffer
+    call    free_screen
 
     mov     ax, 4c00h
     int     21h
@@ -131,7 +132,7 @@ burn_loop1:
     add    bx, 9248h
     ror    bx, 3
     mov    ds:[random_seed], bx
-    mov    ax, MAX_COLORS
+    mov    ax, 255  ; max colors
     mul    bx
     mov    ax, dx
     

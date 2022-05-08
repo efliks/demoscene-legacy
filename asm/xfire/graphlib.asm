@@ -1,7 +1,7 @@
 ; Originally written 9/12/2000
 
-
 include globals.inc
+include graphlib.inc
 
 _DATA   segment
 alloc_err_str   db  'Memory error!', 10, 13, '$'
@@ -13,7 +13,7 @@ _DATA   ends
 _TEXT   segment
 .386
 
-copy_screen_buffer proc
+copy_screen proc
     push    ds
     push    es
     mov     ax, buffer_seg
@@ -31,7 +31,7 @@ copy_screen_buffer proc
 endp
 
 
-clear_screen_buffer proc
+clear_screen proc
     push    es
     mov     ax, buffer_seg
     mov     es, ax
@@ -45,7 +45,7 @@ clear_screen_buffer proc
 endp
 
 
-alloc_screen_buffer proc
+alloc_screen proc
     mov     ah, 4ah
     mov     bx, 1000h
     int     21h
@@ -66,7 +66,7 @@ alloc_error:
 endp
 
 
-free_screen_buffer proc
+free_screen proc
     push    es
     mov     ax, buffer_seg
     mov     es, ax
