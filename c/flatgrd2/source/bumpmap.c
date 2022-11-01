@@ -4,39 +4,36 @@
 	mfelix@polbox.com
 */
 
-unsigned char *bumpmap;
+unsigned char* bumpmap;
 
 int enable_bumpmap(void)
 {
-	int i,j;
-	unsigned char *ptr;
+    int i, j;
+    unsigned char* ptr;
 
-	bumpmap = (unsigned char *)malloc(128*128);
-	if(!bumpmap) return 0;
+    bumpmap = (unsigned char*)malloc(128 * 128);
+    if (!bumpmap)
+        return 0;
 
-	srand((int)rawclock());
+    srand((int)rawclock());
 
-	ptr = bumpmap;
-	for(i=0;i<128*128;i++, ptr++) *ptr = rand() % 255;
+    ptr = bumpmap;
+    for (i = 0; i < 128 * 128; i++, ptr++)
+        *ptr = rand() % 255;
 
-	for(i=0;i<6;i++)
-	{
-		ptr = bumpmap;
-		for(j=0;j<16384;j++)
-		{
-			*ptr = (bumpmap[(j-1) & 16383] +
-					bumpmap[(j+1) & 16383] +
-					bumpmap[(j-128) & 16383] +
-					bumpmap[(j+128) & 16383]) >> 2;
+    for (i = 0; i < 6; i++) {
+        ptr = bumpmap;
+        for (j = 0; j < 16384; j++) {
+            *ptr = (bumpmap[(j - 1) & 16383] + bumpmap[(j + 1) & 16383] + bumpmap[(j - 128) & 16383] + bumpmap[(j + 128) & 16383]) >> 2;
 
-			ptr++;
-		}
-	}
+            ptr++;
+        }
+    }
 
-	return 1;
+    return 1;
 }
 
 void disable_bumpmap(void)
 {
-	free(bumpmap);
+    free(bumpmap);
 }
