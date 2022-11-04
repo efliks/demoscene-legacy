@@ -11,11 +11,7 @@
 #include "3dobj.h"
 #include "graph.h"
 #include "envmap.h"
-
-#include "grd_tri.h"
-#include "tex_tri.h"
-#include "flat_tri.h"
-#include "bump_tri.h"
+#include "triangle.h"
 
 
 void init_face_normals(OBJECT3D* obj);

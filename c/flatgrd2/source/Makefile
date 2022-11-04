@@ -5,7 +5,7 @@ FLAGS=-W -Wall -pedantic
 
 all: flatgrd.exe
 
-flatgrd.exe: 3dmath.o 3dobj.o bumpmap.o bump_tri.o dump_scr.o envmap.o flat_tri.o font.o graph.o grd_tri.o main.o phongpal.o tex_tri.o 
+flatgrd.exe: 3dmath.o 3dobj.o bumpmap.o dump_scr.o envmap.o font.o graph.o main.o phongpal.o triangle.o
 	$(CXX) $^ -o $@ -lm
 
 main.o: main.c
@@ -23,17 +23,8 @@ font.o: font.c
 3dobj.o: 3dobj.c
 	$(CXX) $(FLAGS) $(INCLUDE) -o 3dobj.o -c 3dobj.c
 
-flat_tri.o: flat_tri.c
-	$(CXX) $(FLAGS) $(INCLUDE) -o flat_tri.o -c flat_tri.c
-
-grd_tri.o: grd_tri.c
-	$(CXX) $(FLAGS) $(INCLUDE) -o grd_tri.o -c grd_tri.c
-
-tex_tri.o: tex_tri.c
-	$(CXX) $(FLAGS) $(INCLUDE) -o tex_tri.o -c tex_tri.c
-
-bump_tri.o: bump_tri.c
-	$(CXX) $(FLAGS) $(INCLUDE) -o bump_tri.o -c bump_tri.c
+triangle.o: triangle.c
+	$(CXX) $(FLAGS) $(INCLUDE) -o triangle.o -c triangle.c
 
 envmap.o: envmap.c
 	$(CXX) $(FLAGS) $(INCLUDE) -o envmap.o -c envmap.c
