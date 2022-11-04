@@ -1,34 +1,29 @@
 /*
-	FlatGrd2 06/02/02
-	Mikolaj Felix a.k.a. Majuma
-	mfelix@polbox.com
-*/
+ * FlatGrd2 06/02/02
+ * Mikolaj Felix a.k.a. Majuma
+ * mfelix@polbox.com
+ */
 
-#include <conio.h>
-#include <dos.h>
-#include <math.h>
 #include <mem.h>
+#include <time.h>
+#include <conio.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
-#include <dpmi.h>
-#include <sys/nearptr.h>
+#include "3dobj.h"
+#include "graph.h"
+#include "font.h"
+#include "envmap.h"
+#include "bumpmap.h"
+#include "phongpal.h"
+#include "dump_scr.h"
 
-#include "flatgrd2\\3dmath.c"
-#include "flatgrd2\\envmap.c"
-#include "flatgrd2\\flatgrd2.h"
-#include "flatgrd2\\graph.c"
-//#include "flatgrd2\\bumpmap.c"
-#include "flatgrd2\\flat_tri.c"
-#include "flatgrd2\\font.c"
-#include "flatgrd2\\grd_tri.c"
-#include "flatgrd2\\tex_tri.c"
-//#include "flatgrd2\\bump_tri.c"
-#include "flatgrd2\\3dobj.c"
-#include "flatgrd2\\dump_scr.c"
-#include "flatgrd2\\phongpal.c"
+#define DELAY 0
+#define NO_DELAY 1
+
+#define TEXT_COLOR MAX_PHONG_COLORS + 1
+
 
 void syntax_err(void)
 {
@@ -40,82 +35,40 @@ void syntax_err(void)
     printf("%s", "\t/s save each frame as PCX file\n\n");
 }
 
-void soft_screen(void)
-{
-    asm volatile("xorl	%%eax, %%eax;
-                 movl $80,
-                 % % ecx;
-                 cld;
-                 rep;
-                 stosl;
-
-                 xorl % % ebx, % % ebx;
-                 movl $63360, % % ecx;
-                 soft_scr
-                 : movb - 1(% % edi), % % al;
-                 movb 1(% % edi), % % bl;
-                 addl % % ebx, % % eax;
-                 movb - 320(% % edi), % % bl;
-                 addl % % ebx, % % eax;
-                 movb 320(% % edi), % % bl;
-                 addl % % ebx, % % eax;
-                 shrl $2, % % eax;
-                 stosb;
-                 decl % % ecx;
-                 jnz soft_scr;
-
-                 xorl % % eax, % % eax;
-                 movl $80, % % ecx;
-                 rep;
-                 stosl "
-
-                 /*movl	$15840, %%ecx;
-soft_scr:
-				movl	-4(%%edi), %%eax;
-				addl	4(%%edi), %%eax;
-				addl	-320(%%edi), %%eax;
-				addl	320(%%edi), %%eax;
-				andl	$0xfcfcfcfc, %%eax;
-				shrl	$2, %%eax;
-				stosl;
-				decl	%%ecx;
-				jnz		soft_scr*/
-
-                 :
-                 : "D"(frame_buffer)
-                 : "%eax", "%ebx", "%ecx", "cc");
-
-    /*
-	unsigned char *ptr = frame_buffer;
-	unsigned i, color;
-
-	memset(ptr, 0, 320);
-	ptr += 320;
-
-	for(i = 0; i < 64000-320*2; i++)
-	{
-		color = *(ptr-1) + *(ptr+1) + *(ptr-320) + *(ptr+320);
-		color >>= 2;
-		*ptr = (unsigned char)color;
-		ptr++;
-	}
-
-	memset(ptr, 0, 320);			
-	*/
-}
-
 int main(int argc, char** argv)
 {
     OBJECT3D* obj;
     VECTOR3D light_source;
-    char drawing_mode, display_mode, messages_on, pal_loaded;
-    char txt_buffer[64], txt_buffer2[32];
-    char framerate_txt[40], object_info[32];
-    time_t before, after, indep_before, clock_hrs, clock_min, clock_sec;
-    long all_frames, frames, saved_frames;
-    int dump_mode, blur_mode, i;
-    FILE* log_file;
+
+    char drawing_mode;
+    char display_mode;
+    char messages_on;
+    char pal_loaded;
+    char txt_buffer[64];
+    char txt_buffer2[32];
+    char framerate_txt[40];
+    char object_info[32];
     char key;
+    
+    time_t before;
+    time_t after;
+    time_t indep_before;
+    time_t clock_hrs;
+    time_t clock_min;
+    time_t clock_sec;
+    
+    long all_frames;
+    long frames;
+    long saved_frames;
+    
+    int dump_mode;
+    int blur_mode;
+    int i;
+    
+    FILE* log_file;
+
+    char frame_file[16];
+    long bytes_written;
 
     /* ---------- check program arguments ---------- */
 
@@ -155,8 +108,9 @@ int main(int argc, char** argv)
 
     /* ---------- checked ---------- */
 
-    if ((frame_buffer = (unsigned char*)malloc(BUFFER_SIZE)) == NULL)
+    if ((frame_buffer = (unsigned char*)malloc(BUFFER_SIZE)) == NULL) {
         return 3;
+    }
 
     if (!enable_envmap()) {
         free(frame_buffer);
@@ -184,8 +138,9 @@ int main(int argc, char** argv)
     if (!load_palette("pal_13h.bin")) {
         random_phong_palette();
         pal_loaded = 0;
-    } else
+    } else {
         pal_loaded = 1;
+    }
 
     make_font_palette();
 
@@ -237,8 +192,9 @@ int main(int argc, char** argv)
         rotate_translate_object3d(obj, 1, 3, -1);
         draw_object3d(obj, &light_source, drawing_mode);
 
-        if (blur_mode)
+        if (blur_mode) {
             soft_screen();
+        }
 
         /* ---------- print text messages ---------- */
 
@@ -331,8 +287,9 @@ int main(int argc, char** argv)
                 put_string(txt_buffer, 160 - (strlen(txt_buffer) << 2), 90, TEXT_COLOR, frame_buffer);
 
                 saved_frames++;
-            } else
+            } else {
                 put_string("Unable to save frame!", 76, 90, TEXT_COLOR, frame_buffer);
+            }
 
             strcpy(txt_buffer, "Saved: ");
             strcat(txt_buffer, itoa(bytes_written >> 20, txt_buffer2, 10));
@@ -341,8 +298,9 @@ int main(int argc, char** argv)
             put_string(txt_buffer, 160 - (strlen(txt_buffer) << 2), 102, TEXT_COLOR, frame_buffer);
         }
 
-        if (display_mode == DELAY)
+        if (display_mode == DELAY) {
             retrace();
+        }
 
         copy_buffer();
         clear_buffer();

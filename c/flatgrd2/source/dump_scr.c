@@ -1,8 +1,15 @@
 /*
-	FlatGrd2 06/02/02
-	Mikolaj Felix a.k.a. Majuma
-	mfelix@polbox.com
-*/
+ * FlatGrd2 06/02/02
+ * Mikolaj Felix a.k.a. Majuma
+ * mfelix@polbox.com
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "graph.h"
+
 
 /*
 unsigned char bmp_header[BMP_HEADER_SIZE]={0x42,0x4d,0x36,0xfe,0,0,0,0,0,0,0x36,
@@ -10,7 +17,7 @@ unsigned char bmp_header[BMP_HEADER_SIZE]={0x42,0x4d,0x36,0xfe,0,0,0,0,0,0,0x36,
 	0xc4,0xe,0,0,0,0,0,0,0,0,0,0};
 */
 
-unsigned char pcx_header[PCX_HEADER_SIZE] = { 10, 5, 1, 8, 0, 0, 0, 0, 63, 1, 199, 0, 64, 1, 200,
+unsigned char pcx_header[] = { 10, 5, 1, 8, 0, 0, 0, 0, 63, 1, 199, 0, 64, 1, 200,
     0, 254, 36, 242, 191, 119, 115, 70, 0, 0, 0, 0, 0, 118, 7, 0, 0, 124, 6, 0, 0, 144, 244, 124, 0, 172,
     240, 124, 0, 24, 0, 0, 0, 197, 185, 247, 191, 24, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1, 1, 64, 1, 1, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -18,6 +25,7 @@ unsigned char pcx_header[PCX_HEADER_SIZE] = { 10, 5, 1, 8, 0, 0, 0, 0, 63, 1, 19
 
 char frame_file[16];
 long bytes_written = 0;
+
 
 long dump_pcx(char* filename)
 {
@@ -30,7 +38,7 @@ long dump_pcx(char* filename)
     if (!p)
         return 0;
 
-    fwrite(&pcx_header, 1, PCX_HEADER_SIZE, p);
+    fwrite(&pcx_header, 1, sizeof(pcx_header), p);
 
     buf_off = frame_buffer;
     buf_counter = 0;

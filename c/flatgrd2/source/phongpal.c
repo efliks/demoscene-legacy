@@ -1,8 +1,17 @@
 /*
-	FlatGrd2 06/02/02
-	Mikolaj Felix a.k.a. Majuma
-	mfelix@polbox.com
-*/
+ * FlatGrd2 06/02/02
+ * Mikolaj Felix a.k.a. Majuma
+ * mfelix@polbox.com
+ */
+
+#include <time.h>
+#include <math.h>
+#include <stdio.h>
+#include <random.h>
+
+#include "common.h"
+#include "graph.h"
+
 
 void random_phong_palette(void)
 {
@@ -76,8 +85,9 @@ int load_palette(char* filename)
     FILE* p;
 
     p = fopen(filename, "r+b");
-    if (!p)
+    if (!p) {
         return 0;
+    }
     fread(palette, 1, 768, p);
     fclose(p);
     return 1;

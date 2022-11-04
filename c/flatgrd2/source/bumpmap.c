@@ -1,10 +1,14 @@
 /*
-	FlatGrd2 06/02/02
-	Mikolaj Felix a.k.a. Majuma
-	mfelix@polbox.com
-*/
+ * FlatGrd2 06/02/02
+ * Mikolaj Felix a.k.a. Majuma
+ * mfelix@polbox.com
+ */
+
+#include <time.h>
+#include <stdlib.h>
 
 unsigned char* bumpmap;
+
 
 int enable_bumpmap(void)
 {
@@ -12,8 +16,9 @@ int enable_bumpmap(void)
     unsigned char* ptr;
 
     bumpmap = (unsigned char*)malloc(128 * 128);
-    if (!bumpmap)
+    if (!bumpmap) {
         return 0;
+    }
 
     srand((int)rawclock());
 

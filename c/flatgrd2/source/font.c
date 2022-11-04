@@ -1,10 +1,17 @@
 /*
-	FlatGrd2 06/02/02
-	Mikolaj Felix a.k.a. Majuma
-	mfelix@polbox.com
-*/
+ * FlatGrd2 06/02/02
+ * Mikolaj Felix a.k.a. Majuma
+ * mfelix@polbox.com
+ */
+
+#include <dos.h>
+#include <mem.h>
+#include <dpmi.h>
+#include <string.h>  // for memset
+#include <sys/nearptr.h>
 
 unsigned char font[2048];
+
 
 void init_font(void)
 {
@@ -24,55 +31,6 @@ void init_font(void)
     __djgpp_nearptr_disable();
 }
 
-void put_char(char ascii_code, int x, int y,
-    unsigned char color, unsigned char* where)
-{
-    /*
-		ac	ebp+8
-		x	ebp+12
-		y	ebp+16
-		col	ebp+20
-	*/
-
-    asm volatile("movl 16(%%ebp),%%eax;
-                     movl
-                     % % eax,
-                 % % edx;
-                 sall $6, % % eax;
-                 sall $8, % % edx;
-                 addl % % edx, % % eax;
-                 addl 12(% % ebp), % % eax;
-                 addl % % eax, % % edi;
-
-                 movl 8(% % ebp), % % eax;
-                 sall $3, % % eax;
-                 addl % % eax, % % esi;
-
-                 movl 20(% % ebp), % % edx;
-
-                 movb $8, % % ch;
-                 pc_hor
-                 : lodsb;
-                 movb $8, % % cl;
-                 pc_ver
-                 : rclb $1, % % al;
-                 jae pc_next;
-                 movb % % dl, (% % edi);
-                 pc_next
-                 : incl % % edi;
-                 decb % % cl;
-                 jnz pc_ver;
-
-                 addl $(320 - 8), % % edi;
-                 incb % % dl;
-                 decb % % ch;
-                 jnz pc_hor "
-                 :
-                 : "S"(font), "D"(where)
-                 : "%eax", "%ecx", "%edx", "cc", "memory");
-}
-
-/*
 void put_char(char ascii_code,int x,int y,
 		unsigned char color,unsigned char *where)
 {
@@ -100,7 +58,6 @@ void put_char(char ascii_code,int x,int y,
 		color++;
 	}
 }
-*/
 
 void put_string(char* text, int x, int y,
     unsigned char color, unsigned char* where)

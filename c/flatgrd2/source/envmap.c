@@ -1,8 +1,12 @@
 /*
-	FlatGrd2 06/02/02
-	Mikolaj Felix a.k.a. Majuma
-	mfelix@polbox.com
-*/
+ * FlatGrd2 06/02/02
+ * Mikolaj Felix a.k.a. Majuma
+ * mfelix@polbox.com
+ */
+
+#include <math.h>
+#include <stdlib.h>
+
 
 unsigned char* envmap;
 
@@ -12,12 +16,13 @@ int enable_envmap(void)
     unsigned char *ptr, color;
 
     envmap = (unsigned char*)malloc(128 * 128);
-    if (!envmap)
+    if (!envmap) {
         return 0;
+    }
 
     ptr = envmap;
 
-    for (y = -64; y < 64; y++)
+    for (y = -64; y < 64; y++) {
         for (x = -64; x < 64; x++) {
             temp_color = (62 - sqrt(pow(x, 2) + pow(y, 2))) * 1.2;
 
@@ -30,6 +35,7 @@ int enable_envmap(void)
             *ptr = color;
             ptr++;
         }
+    }
 
     return 1;
 }

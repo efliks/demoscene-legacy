@@ -1,10 +1,14 @@
 /*
-	FlatGrd2 06/02/02
-	Mikolaj Felix a.k.a. Majuma
-	mfelix@polbox.com
-*/
+ * FlatGrd2 06/02/02
+ * Mikolaj Felix a.k.a. Majuma
+ * mfelix@polbox.com
+ */
+
+#include <math.h>
+#include "3dmath.h"
 
 float sintab[MAX_DEGS], costab[MAX_DEGS];
+
 
 void init_sincos(void)
 {

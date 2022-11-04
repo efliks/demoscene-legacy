@@ -1,111 +1,46 @@
 /*
-	FlatGrd2 06/02/02
-	Mikolaj Felix a.k.a. Majuma
-	mfelix@polbox.com
-*/
+ * FlatGrd2 06/02/02
+ * Mikolaj Felix a.k.a. Majuma
+ * mfelix@polbox.com
+ */
+
+#include "common.h"
+
 
 void gouraud_line(int x1, int x2, int y, unsigned char c1, unsigned char c2,
     unsigned char* buffer)
 {
-    /*
-		x1	ebp+08
-		x2	ebp+12
-		y	ebp+16
-		c1	ebp+20
-		c2	ebp+24
-	*/
+    long delta_c, curr_c;
+    int i;
+    unsigned char* ofs;
 
-    asm volatile("movl 16(%%ebp),%%eax;
-                     orl
-                     % % eax,
-                 % % eax;
-                 jl gl_quit_proc;
-                 cmpl $199, % % eax;
-                 jg gl_quit_proc;
+    if (y < 0 || y > 199 || x1 == x2) {
+        return;
+    }
 
-                 movl 8(% % ebp), % % eax;
-                 cmpl 12(% % ebp), % % eax;
-                 je gl_quit_proc;
-                 jl gl_no_xchg;
+    if (x1 > x2) {
+        i = x1;
+        x1 = x2;
+        x2 = i;
 
-                 xchgl 12(% % ebp), % % eax;
-                 movl % % eax, 8(% % ebp);
+        i = c1;
+        c1 = c2;
+        c2 = i;
+    }
 
-                 movl 20(% % ebp), % % eax;
-                 xchgl 24(% % ebp), % % eax;
-                 movl % % eax, 20(% % ebp);
-                 gl_no_xchg
-                 : mov 16(% % ebp), % % eax;
-                 movl % % eax, % % ecx;
-                 sall $6, % % eax;
-                 sall $8, % % ecx;
-                 addl % % ecx, % % eax;
-                 addl 8(% % ebp), % % eax;
-                 addl % % eax, % % edi;
+    delta_c = ((c2 - c1) << SHIFT_CONST) / (x2 - x1);
+    curr_c = c1 << SHIFT_CONST;
 
-                 movl 12(% % ebp), % % ecx;
-                 subl 8(% % ebp), % % ecx;
+    ofs = buffer;
+    ofs += ((y << 6) + (y << 8) + x1);
 
-                 movl 24(% % ebp), % % eax;
-                 subl 20(% % ebp), % % eax;
-                 sall $8, % % eax;
-                 cltd;
-                 idivl % % ecx;
-                 movl % % eax, % % edx;
-
-                 movl 20(% % ebp), % % ebx;
-                 sall $8, % % ebx;
-                 gl_draw
-                 : movl % % ebx, % % eax;
-                 sarl $8, % % eax;
-                 stosb;
-
-                 addl % % edx, % % ebx;
-                 decl % % ecx;
-                 jnz gl_draw;
-                 gl_quit_proc
-                 : "
-                 :
-                 : "D"(frame_buffer)
-                 : "%eax", "%ebx", "%ecx", "%edx", "cc", "memory");
+    i = 0;
+    while ((i++) < (x2 - x1)) {
+        *ofs = curr_c >> SHIFT_CONST;
+        curr_c += delta_c;
+        ofs++;
+    }
 }
-
-/*
-void gouraud_line(int x1,int x2,int y,unsigned char c1,unsigned char c2,
-				unsigned char *buffer)
-{
-	long delta_c,curr_c;
-	int i;
-	unsigned char *ofs;
-
-	if(y<0 || y>199 || x1==x2) return;
-
-	if(x1>x2)
-	{
-		i=x1;
-		x1=x2;
-		x2=i;
-
-		i=c1;
-		c1=c2;
-		c2=i;
-	}
-
-	delta_c=((c2-c1)<<SHIFT_CONST)/(x2-x1);
-	curr_c=c1<<SHIFT_CONST;
-
-	ofs=buffer;
-	ofs+=((y<<6)+(y<<8)+x1);
-
-	i=0;
-	while((i++)<(x2-x1))
-	{
-		*ofs=curr_c>>SHIFT_CONST;
-		curr_c+=delta_c;
-		ofs++;
-	}
-}
-*/
 
 void gouraud_triangle(int x1, int y1, int x2, int y2, int x3, int y3,
     unsigned char c1, unsigned char c2, unsigned char c3,
@@ -205,3 +140,4 @@ void gouraud_triangle(int x1, int y1, int x2, int y2, int x3, int y3,
         scan_c2 += dc23;
     }
 }
+

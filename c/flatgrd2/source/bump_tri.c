@@ -1,8 +1,88 @@
 /*
-	FlatGrd2 06/02/02
-	Mikolaj Felix a.k.a. Majuma
-	mfelix@polbox.com
-*/
+ * FlatGrd2 06/02/02
+ * Mikolaj Felix a.k.a. Majuma
+ * mfelix@polbox.com
+ */
+
+#include "common.h"
+
+
+void bump_line(int x1, int x2, int y,
+    int bx1, int by1, int bx2, int by2,
+    int ex1, int ey1, int ex2, int ey2,
+    unsigned char* bumpmap, unsigned char* envmap,
+    unsigned char* buffer)
+{
+    unsigned char *ofs, color;
+    int i, width;
+    long dbx, dby, curr_bx, curr_by;
+    long dex, dey, curr_ex, curr_ey;
+    int nx, ny, off;
+
+    if (y < 0 || y > 199 || x1 == x2)
+        return;
+
+    if (x1 > x2) {
+        i = x1;
+        x1 = x2;
+        x2 = i;
+
+        i = bx1;
+        bx1 = bx2;
+        bx2 = i;
+
+        i = by1;
+        by1 = by2;
+        by2 = i;
+
+        i = ex1;
+        ex1 = ex2;
+        ex2 = i;
+
+        i = ey1;
+        ey1 = ey2;
+        ey2 = i;
+    }
+
+    width = x2 - x1;
+    dbx = ((bx2 - bx1) << SHIFT_CONST) / width;
+    dby = ((by2 - by1) << SHIFT_CONST) / width;
+
+    dex = ((ex2 - ex1) << SHIFT_CONST) / width;
+    dey = ((ey2 - ey1) << SHIFT_CONST) / width;
+
+    curr_bx = bx1 << SHIFT_CONST;
+    curr_by = by1 << SHIFT_CONST;
+
+    curr_ex = ex1 << SHIFT_CONST;
+    curr_ey = ey1 << SHIFT_CONST;
+
+    ofs = buffer;
+    ofs += ((y << 6) + (y << 8) + x1);
+
+    for (i = 0; i < width; i++) {
+        off = (curr_bx >> SHIFT_CONST) + ((curr_by >> SHIFT_CONST) << 7);
+        nx = bumpmap[(off - 1) & 16383] - bumpmap[(off + 1) & 16383];
+        ny = bumpmap[(off - 128) & 16383] - bumpmap[(off + 128) & 16383];
+
+        nx += (curr_ex >> SHIFT_CONST);
+        ny += (curr_ey >> SHIFT_CONST);
+
+        if (nx >= 0 && nx <= 127 && ny >= 0 && ny <= 127)
+            color = envmap[nx + (ny << 7)];
+        else
+            color = 0;
+
+        *ofs = color;
+        ofs++;
+
+        curr_bx += dbx;
+        curr_by += dby;
+
+        curr_ex += dex;
+        curr_ey += dey;
+    }
+}
 
 void bumpmapped_triangle(tri_struct* tri, tri_struct* bump_tri,
     tri_struct* env_tri,
@@ -210,79 +290,3 @@ void bumpmapped_triangle(tri_struct* tri, tri_struct* bump_tri,
     }
 }
 
-void bump_line(int x1, int x2, int y,
-    int bx1, int by1, int bx2, int by2,
-    int ex1, int ey1, int ex2, int ey2,
-    unsigned char* bumpmap, unsigned char* envmap,
-    unsigned char* buffer)
-{
-    unsigned char *ofs, color;
-    int i, width;
-    long dbx, dby, curr_bx, curr_by;
-    long dex, dey, curr_ex, curr_ey;
-    int nx, ny, off;
-
-    if (y < 0 || y > 199 || x1 == x2)
-        return;
-
-    if (x1 > x2) {
-        i = x1;
-        x1 = x2;
-        x2 = i;
-
-        i = bx1;
-        bx1 = bx2;
-        bx2 = i;
-
-        i = by1;
-        by1 = by2;
-        by2 = i;
-
-        i = ex1;
-        ex1 = ex2;
-        ex2 = i;
-
-        i = ey1;
-        ey1 = ey2;
-        ey2 = i;
-    }
-
-    width = x2 - x1;
-    dbx = ((bx2 - bx1) << SHIFT_CONST) / width;
-    dby = ((by2 - by1) << SHIFT_CONST) / width;
-
-    dex = ((ex2 - ex1) << SHIFT_CONST) / width;
-    dey = ((ey2 - ey1) << SHIFT_CONST) / width;
-
-    curr_bx = bx1 << SHIFT_CONST;
-    curr_by = by1 << SHIFT_CONST;
-
-    curr_ex = ex1 << SHIFT_CONST;
-    curr_ey = ey1 << SHIFT_CONST;
-
-    ofs = buffer;
-    ofs += ((y << 6) + (y << 8) + x1);
-
-    for (i = 0; i < width; i++) {
-        off = (curr_bx >> SHIFT_CONST) + ((curr_by >> SHIFT_CONST) << 7);
-        nx = bumpmap[(off - 1) & 16383] - bumpmap[(off + 1) & 16383];
-        ny = bumpmap[(off - 128) & 16383] - bumpmap[(off + 128) & 16383];
-
-        nx += (curr_ex >> SHIFT_CONST);
-        ny += (curr_ey >> SHIFT_CONST);
-
-        if (nx >= 0 && nx <= 127 && ny >= 0 && ny <= 127)
-            color = envmap[nx + (ny << 7)];
-        else
-            color = 0;
-
-        *ofs = color;
-        ofs++;
-
-        curr_bx += dbx;
-        curr_by += dby;
-
-        curr_ex += dex;
-        curr_ey += dey;
-    }
-}

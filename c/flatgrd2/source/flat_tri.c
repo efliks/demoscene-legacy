@@ -1,88 +1,37 @@
 /*
-	FlatGrd2 06/02/02
-	Mikolaj Felix a.k.a. Majuma
-	mfelix@polbox.com
-*/
+ * FlatGrd2 06/02/02
+ * Mikolaj Felix a.k.a. Majuma
+ * mfelix@polbox.com
+ */
+
+#include "common.h"
+
 
 void flat_line(int x1, int x2, int y, unsigned char color,
     unsigned char* buffer)
 {
-    /*
-		x1	ebp+8
-		x2	ebp+12
-		y	ebp+16
-		col	ebp+20
-	*/
+    int i;
+    unsigned char* ofs;
 
-    asm volatile("movl 16(%%ebp),%%eax;
-                     orl
-                     % % eax,
-                 % % eax;
-                 jl fl_quit;
-                 cmpl $199, % % eax;
-                 jg fl_quit;
+    if (y < 0 || y > 199 || x1 == x2) {
+        return;
+    }
 
-                 movl 8(% % ebp), % % eax;
-                 cmpl 12(% % ebp), % % eax;
-                 jl fl_no_xchg;
-                 je fl_quit;
+    if (x1 > x2) {
+        i = x1;
+        x1 = x2;
+        x2 = i;
+    }
 
-                 xchgl 12(% % ebp), % % eax;
-                 movl % % eax, 8(% % ebp);
-                 fl_no_xchg
-                 : mov 16(% % ebp), % % eax;
-                 movl % % eax, % % ecx;
-                 sall $6, % % eax;
-                 sall $8, % % ecx;
-                 addl % % ecx, % % eax;
-                 addl 8(% % ebp), % % eax;
-                 addl % % eax, % % edi;
+    ofs = buffer;
+    ofs += ((y << 6) + (y << 8) + x1);
 
-                 movl 20(% % ebp), % % eax;
-                 movb % % al, % % ah;
-
-                 movl 12(% % ebp), % % ecx;
-                 subl 8(% % ebp), % % ecx;
-                 sarl $1, % % ecx;
-                 jnc fl_draw;
-                 stosb;
-                 fl_draw
-                 : rep;
-                 stosw;
-                 fl_quit
-                 : "
-                 :
-                 : "D"(buffer)
-                 : "%eax", "%ecx", "cc", "memory");
+    i = 0;
+    while ((i++) < (x2 - x1)) {
+        *ofs = color;
+        ofs++;
+    }
 }
-
-/*
-void flat_line(int x1,int x2,int y,unsigned char color,
-			unsigned char *buffer)
-{
-	int i;
-	unsigned char *ofs;
-
-	if(y<0 || y>199 || x1==x2) return;
-
-	if(x1>x2)
-	{
-		i=x1;
-		x1=x2;
-		x2=i;
-	}
-
-	ofs=frame_buffer;
-	ofs+=((y<<6)+(y<<8)+x1);
-
-	i=0;
-	while((i++)<(x2-x1))
-	{
-		*ofs=color;
-		ofs++;
-	}
-}
-*/
 
 void flat_triangle(int x1, int y1, int x2, int y2, int x3, int y3,
     unsigned char color, unsigned char* buffer)
@@ -151,3 +100,4 @@ void flat_triangle(int x1, int y1, int x2, int y2, int x3, int y3,
         scan_x2 += dx23;
     }
 }
+

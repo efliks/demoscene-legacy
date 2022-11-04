@@ -1,8 +1,32 @@
 /*
-	FlatGrd2 06/02/02
-	Mikolaj Felix a.k.a. Majuma
-	mfelix@polbox.com
-*/
+ * FlatGrd2 06/02/02
+ * Mikolaj Felix a.k.a. Majuma
+ * mfelix@polbox.com
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>  // for memset
+
+#include "3dobj.h"
+#include "graph.h"
+#include "envmap.h"
+
+#include "grd_tri.h"
+#include "tex_tri.h"
+#include "flat_tri.h"
+#include "bump_tri.h"
+
+
+void init_face_normals(OBJECT3D* obj);
+void init_point_normals(OBJECT3D *obj);
+
+void sort_faces(OBJECT3D* obj);
+void depth_sorting(OBJECT3D* obj, short int left, short int right);
+
+void init_tex_coords(OBJECT3D *o);
+void save_tex_coords(OBJECT3D *o, char *filename);
+
 
 OBJECT3D* load_object3d(char* filename)
 {

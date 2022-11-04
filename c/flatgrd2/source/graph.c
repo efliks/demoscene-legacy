@@ -1,10 +1,17 @@
 /*
-	FlatGrd2 06/02/02
-	Mikolaj Felix a.k.a. Majuma
-	mfelix@polbox.com
-*/
+ * FlatGrd2 06/02/02
+ * Mikolaj Felix a.k.a. Majuma
+ * mfelix@polbox.com
+ */
+
+#include <dos.h>
+#include <mem.h>
+#include <dpmi.h>
+#include <string.h>  // for memset
+#include <sys/nearptr.h>
 
 unsigned char *frame_buffer, palette[768];
+
 
 void set_vga(void)
 {
@@ -52,8 +59,9 @@ void set_palette(void)
     int i;
 
     outp(0x03c8, 0);
-    for (i = 0; i < 768; i++)
+    for (i = 0; i < 768; i++) {
         outp(0x03c9, palette[i]);
+    }
 }
 
 void get_palette(void)
@@ -61,6 +69,27 @@ void get_palette(void)
     int i;
 
     outp(0x03c7, 0);
-    for (i = 0; i < 768; i++)
+    for (i = 0; i < 768; i++) {
         palette[i] = inp(0x03c9);
+    }
 }
+
+void soft_screen(void)
+{
+	unsigned char *ptr = frame_buffer;
+	unsigned i, color;
+
+	memset(ptr, 0, 320);
+	ptr += 320;
+
+	for(i = 0; i < 64000-320*2; i++)
+	{
+		color = *(ptr-1) + *(ptr+1) + *(ptr-320) + *(ptr+320);
+		color >>= 2;
+		*ptr = (unsigned char)color;
+		ptr++;
+	}
+
+	memset(ptr, 0, 320);			
+}
+
