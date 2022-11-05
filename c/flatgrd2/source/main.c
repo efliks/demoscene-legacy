@@ -373,7 +373,5 @@ int main(int argc, char** argv)
     disable_envmap();
     //disable_bumpmap();
 
-    save_palette("pal_13h.bin");
-
     return 0;
 }
