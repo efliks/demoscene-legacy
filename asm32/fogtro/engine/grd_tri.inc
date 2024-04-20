@@ -1,2 +1,0 @@
-
-GT_SHIFT	equ 12
