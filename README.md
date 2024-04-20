@@ -8,114 +8,69 @@ Assembler enthusiasts called New Age Assembler Group or NAAG
 For example, in June 2002 we released our only zine that can still
 be found [here](http://www.pouet.net/prod.php?which=50666).
 
-Here is a collection of graphical effects and intros written originally 
-for MS-DOS in x86 Assembly language. Some of these effects were published on 
+Here is a collection of graphical effects written originally for DOS 
+in x86 Assembly language. Some of these effects were published on 
 [Demozoo](https://demozoo.org/sceners/70017/), a demoscene site.
+
+The effects are all implemented in 16-bit Assembly and use real mode. 
+I have some better effects in 32-bit protected mode Assembly in 
+a [new repository](https://github.com/efliks/megassembly).
 
 This collection also contained effects written in C, but I have made 
 a [separate repository](https://github.com/efliks/doseffects) for them.
 
-## Running programs in a DOS emulator
+## Compiling the effects
 
-Despite DOS being long gone, it is quite easy to run the programs in
-an emulator, such as [DOSBox](http://www.dosbox.com/). Under Linux, 
-enter each program's directory and type in, for example:
+To compile and run the graphical effects, there are many options. You can use 
+a retro PC with DOS, a virtual machine running DOS, or a PC emulator such as 
+DOSBox or PCem.
 
-```
-linux> dosbox 3DFLAG.COM
-```
+For my development purposes, I use a VirtualBox VM with Win98. I also have 
+a Pentium II PC for testing the "final product".
 
-The program will now run. To exit, press [ESC] and type in "exit"
-after returning to the DOSBox console. Some graphical effects also
-react to pressing [SPACE] (change rendering mode, etc).
+Secondly, you need some assembler. Back in the days, I used compilers
+from Borland, legally or not. Luckily, they seem to have become abandonware.
+For example, here you can download 
+[Borland Turbo Assembler 5.0](https://winworldpc.com/product/turbo-assembler/5x).
 
-Usually, the programs will run very slow. It is possible to accelerate
-them to some degree by repeatedly pressing [CTRL+SHIFT+F12], 
-which will increase the number of "cycles" in DOSBox.
+Once you have the assembler installed, open the attached makefile and replace
+the paths to TASM and TLINK with your own.
 
-To run them at their original speed, it might be necessary to set up 
-a dedicated old computer with something like
-[FreeDOS](http://www.freedos.org/) on board. Since the development 
-was originally done on a Pentium 133 MHz system, any computer will do 
-just fine.
-
-
-## Running programs using protected mode
-
-Some programs (*fogtro*, *3dfontz*) were written in protected mode 
-and require a DOS extender.
-
-Download the CWSDPMI extender from 
-[here](https://web.archive.org/web/20151217064947/http://homer.rice.edu/~sandmann/cwsdpmi/index.html).
-I have only used the
-[binary distribution](https://web.archive.org/web/20151217064947/http://homer.rice.edu/~sandmann/cwsdpmi/csdpmi7b.zip)
-of CWSDPMI. Unpack the ZIP file and proceed as follows:
+Then, simply run make:
 
 ```
-linux> cp cwsdpmi/bin/CWSDPMI.EXE fogtro/
-linux> cd fogtro/
-linux> dosbox .
+c:\legacy > c:\tasm\bin\make.exe -f makefile
 ```
 
-Once in DOSBox, start the extender first, followed by the actual
-program:
+## Running the effects
 
-```
-dosbox> CWSDPMI.EXE
-dosbox> FOGTRO!.EXE
-```
+At this point, you should have around 19 COM files. 
 
+Press any key to quit. In *asmshade*, you can press [space] to cycle 
+between different display modes, and [escape] to quit.
 
-## Compilation how-to
+If you are using DOSBox, it may be that some effects run too slowly. 
+It is possible to accelerate them to some degree by repeatedly 
+pressing [ctrl + shift + f12], which will increase the number of "cycles" 
+in DOSBox.
 
-Executable files, COM and EXE, are attached. If you would like to 
-recompile the programs, here is (more or less) how to do it.
+The effects rely on vertical retrace for timing. Unfortunately, in 
+VirtualBox this feature seems to be broken, and the effects run very very 
+fast. I will implement a better mechanism based on the PC timer, when 
+the time permits.
 
-The source codes may be a bit challenging to compile. Back in the day, 
-I used compilers from Borland, TASM and Turbo C. Today, the problem seems 
-to be with the "ideal" syntax of Borland, which is not recognized by 
-modern compilers, such as GNU Assembler or NASM.
+## System requirements
 
-Luckily, TASM seems to have become abandonware and is available 
-on the web, for example [here](http://trimtab.ca/assets/files/tasm.zip). 
-Unpack the ZIP archive in the main directory and start DOSBox:
+The code is really ancient 16-bit Assembly, but it makes use of some 
+32-bit instructions, eg. to accelerate copying display buffers. It also 
+relies on the mathematical coprocessor.
 
-```
-linux> cd demoscene-legacy/
-linux> dosbox .
-```
+It seems that a 386DX PC with a VGA video card is required just to start. 
+I did the original development on a Pentium 133 Mhz PC, but I have never run 
+these effects on anything slower.
 
-In the next step, enter a program's directory and compile it, 
-for example:
-
-```
-dosbox> cd bline/
-dosbox> c:\tasm\bin\tasm.exe b_line.asm
-```
-
-The above command will generate a "b\_line.com" executable that is ready
-to run. Note the Microsoft-style backslashes.
-
-Programs written for protected mode have in general 
-a BAT file with compilation instructions in it. The file is 
-usually called "\_make.bat". I managed to build *fogtro* in 
-the following way:
-
-```
-dosbox> cd fogtro/
-dosbox> c:\tasm\bin\tasm.exe fogtro! /m /p /q
-dosbox> c:\tasm\bin\tlink.exe fogtro! kernel\kernel,fogtro!.exe /3 /x
-```
-
-Finally, one program *chemol* is unusual in that it can be built 
-directly under Linux with NASM:
-
-```
-linux> nasm -f bin chemol.asm -o chemol.com
-```
-
-NASM will generate a 16-bit binary that runs under DOSBox.
-
+Regarding the memory, all effects use the tiny memory model, but allocate some 
+additional segments. 256 kB of free conventional memory should be enough.
 
 ## Final notes
 
