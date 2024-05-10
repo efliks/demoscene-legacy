@@ -12,11 +12,9 @@ Here is a collection of graphical effects written originally for DOS
 in x86 Assembly language. Some of these effects were published on 
 [Demozoo](https://demozoo.org/sceners/70017/), a demoscene site.
 
-<!---
 The effects are all implemented in 16-bit Assembly and use real mode. 
 I have some better effects in 32-bit protected mode Assembly in 
 a [new repository](https://github.com/efliks/megassembly).
--->
 
 This collection also contained effects written in C, but I have made 
 a [separate repository](https://github.com/efliks/doseffects) for them.
