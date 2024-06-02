@@ -3,6 +3,7 @@ include sys.inc
 .model tiny
 .code
 .386
+locals
 
 org 100h
 
@@ -19,6 +20,8 @@ do_startup proc
     jz      quit_me
     mov     buffer_seg, ax
 
+    call    timer_setup
+
     mov     ax, 13h
     int     10h
     ret
@@ -32,6 +35,8 @@ do_shutdown proc
     int     10h
     mov     ax, buffer_seg
     call    free_seg
+
+    call    timer_shutdown
 
     mov     ah, 4ch
     int     21h
@@ -251,7 +256,113 @@ ps_quit:
     ret
 endp
 
+;************************************************************
+;
+;       Timer routines
+;
+;************************************************************
+
+TIMES_FASTER equ 15
+DOS_DIVISOR equ 65535
+MY_DIVISOR equ DOS_DIVISOR / TIMES_FASTER
+
+TIMER_WAIT_TICKS equ 6
+
+
+timer_wait proc
+@@wait_loop:
+    mov     eax, timer_now
+    cmp     eax, timer_stop
+    jg      @@wait_break
+    hlt
+    jmp     @@wait_loop
+
+@@wait_break:
+    mov     eax, TIMER_WAIT_TICKS
+    add     eax, timer_now
+    mov     timer_stop, eax
+    ret
+endp
+
+timer_setup proc
+    push    es
+    mov     ax, 351ch
+    int     21h
+    mov     word ptr [dos_timer_interrupt], bx
+    mov     word ptr [dos_timer_interrupt+2], es
+    pop     es
+
+    push    ds
+    mov     dx, offset timer_interrupt
+    mov     ax, 251ch
+    int     21h
+    pop     ds
+
+    mov     dx, 43h
+    mov     al, 34h
+    out     dx, al
+    mov     dx, 40h
+    mov     al, 11h ; MY_DIVISOR & 0xff
+    out     dx, al
+    mov     al, 11h ; ( MY_DIVISOR >> 8 ) & 0xff
+    out     dx, al
+
+    ret
+endp
+
+timer_shutdown proc
+    push    ds
+    mov     dx, word ptr [dos_timer_interrupt]
+    mov     ax, word ptr [dos_timer_interrupt+2]
+    mov     ds, ax
+    mov     ax, 251ch
+    int     21h
+    pop     ds
+   
+    mov     dx, 43h
+    mov     al, 34h
+    out     dx, al
+    mov     dx, 40h
+    mov     al, -1
+    out     dx, al
+    out     dx, al
+
+    ret
+endp
+
+timer_interrupt proc
+    pushad
+    push    cs
+    pop     ds
+
+    mov     eax, timer_now
+    inc     eax
+    mov     timer_now, eax
+
+    mov     eax, timer_dos
+    inc     eax
+    cmp     eax, TIMES_FASTER
+    jb      @@skip_old_interrupt
+    xor     eax, eax
+    mov     timer_dos, eax
+    pushf
+    call    dword ptr [dos_timer_interrupt]
+
+@@skip_old_interrupt:
+
+    popad
+    iret
+endp
+
+.data
+
+timer_dos dd 0
+timer_now dd 0
+timer_stop dd TIMER_WAIT_TICKS
+
 .data?
+
+dos_timer_interrupt dd ?
 
 font_data db 2048 dup(?)
 buffer_seg dw ?
