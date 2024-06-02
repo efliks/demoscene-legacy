@@ -18,3 +18,7 @@ global put_string:PROC
 
 global buffer_seg:WORD
 global font_data:BYTE
+
+global timer_wait:PROC
+global timer_setup:PROC
+global timer_shutdown:PROC
