@@ -2,7 +2,6 @@
 
 include sys.inc
 include math3d.inc
-include cusfont.inc
 
 MAX_POINTS equ 125
 
@@ -35,17 +34,19 @@ entrypoint:
     rep     movsd
 
     call    make_circle
+    call    init_font
+
 main_loop:
     mov     si, offset text1
-    mov     ah, 31
+    mov     al, 21
     mov     cx, 160-(21*8)/2
     xor     dx, dx
-    call    put_custom_string
+    call    put_string
     mov     si, offset text2
-    mov     ah, 31
+    mov     al, 21
     mov     cx, 160-(12*8)/2
     mov     dx, 191
-    call    put_custom_string
+    call    put_string
 
     inc     morph_counter
     cmp     morph_counter, 600

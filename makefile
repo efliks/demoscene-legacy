@@ -54,8 +54,8 @@ wireblur.com: wireblur.obj math3d.obj sys.obj
 flag3d.com: flag3d.obj math3d.obj flat3.obj sys.obj
 	$(TLINK) /t flag3d.obj math3d.obj flat3.obj sys.obj,flag3d.com
 
-morph3d.com: morph3d.obj cusfont.obj math3d.obj sys.obj
-	$(TLINK) /t morph3d.obj cusfont.obj math3d.obj sys.obj,morph3d.com
+morph3d.com: morph3d.obj math3d.obj sys.obj
+	$(TLINK) /t morph3d.obj math3d.obj sys.obj,morph3d.com
 
 fixed3d.com: fixed3d.obj flat3.obj sys.obj
 	$(TLINK) /t fixed3d.obj flat3.obj sys.obj,fixed3d.com
