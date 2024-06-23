@@ -189,19 +189,16 @@ draw_hor:
     sar     ax, 1
     add     ax, 31
     mov     scale_const, ax
-;------------------------------------------------------------
 
     call    timer_wait
     call    copy_buffer
 
-    mov     ah, 1h
-    int     16h
-    jnz     key_hit
-    jmp     main_loop
-key_hit:
-    xor     ah, ah
-    int     16h
+    call    is_key_pressed
+    dec     ax
+    jz      main_loop
+
     call    do_shutdown
+
 
 .data
 

@@ -22,3 +22,5 @@ global font_data:BYTE
 global timer_wait:PROC
 global timer_setup:PROC
 global timer_shutdown:PROC
+
+global is_key_pressed:PROC

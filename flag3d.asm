@@ -133,9 +133,9 @@ main_loop:
     inc     cosofs
 skip_wave_change:
 
-    in      al, 60h
-    dec     al
-    jnz     main_loop
+    call    is_key_pressed
+    dec     ax
+    jz      main_loop
 
     mov     ax, 03h
     int     10h

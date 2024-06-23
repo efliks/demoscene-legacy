@@ -29,15 +29,12 @@ main_loop:
     call    timer_wait
     call    copy_buffer
     
-    mov     ah, 1h
-    int     16h
-    jnz     key_hit
-    jmp     main_loop
-key_hit:
-    xor     ah, ah
-    int     16h
+    call    is_key_pressed
+    dec     ax
+    jz      main_loop
 
     call    do_shutdown
+
 
 comment #
 make_palette proc

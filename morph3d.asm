@@ -99,9 +99,9 @@ m_continue:
     call    clear_buffer
     call    timer_wait
 
-    in      al, 60h
-    cmp     al, 1
-    jne     main_loop
+    call    is_key_pressed
+    dec     ax
+    jz      main_loop
 
     call    do_shutdown
 

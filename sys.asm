@@ -42,6 +42,20 @@ do_shutdown proc
     int     21h
 endp
 
+is_key_pressed proc
+    mov     ah, 1h
+    int     16h
+    jnz     @@key_is_pressed
+    mov     ax, 1
+    ret
+
+@@key_is_pressed:
+    xor     ah, ah
+    int     16h
+    xor     ax, ax
+    ret
+endp
+
 copy_buffer proc
 
 comment #
