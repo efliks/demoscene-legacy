@@ -19,17 +19,17 @@ a [new repository](https://github.com/efliks/megassembly).
 This collection also contained effects written in C, but I have made 
 a [separate repository](https://github.com/efliks/doseffects) for them.
 
-## Compiling the effects
+## Build
 
 To compile and run the graphical effects, there are many options. You can use 
 a retro PC with DOS, a virtual machine running DOS, or a PC emulator such as 
 DOSBox or PCem.
 
 For my development purposes, I use a VirtualBox VM with Win98. I also have 
-a Pentium II PC for testing the "final product".
+a Pentium II system for testing the "final product".
 
 Secondly, you need some assembler. Back in the days, I used compilers
-from Borland, legally or not. Luckily, they seem to have become abandonware.
+from Borland. Luckily, they seem to have become abandonware.
 For example, here you can download 
 [Borland Turbo Assembler 5.0](https://winworldpc.com/product/turbo-assembler/5x).
 
@@ -42,7 +42,7 @@ Then, simply run make:
 c:\legacy > c:\tasm\bin\make.exe -f makefile
 ```
 
-## Running the effects
+## Execute
 
 At this point, you should have around 19 COM files. 
 
@@ -54,20 +54,15 @@ It is possible to accelerate them to some degree by repeatedly
 pressing [ctrl + shift + f12], which will increase the number of "cycles" 
 in DOSBox.
 
-The effects rely on vertical retrace for timing. Unfortunately, in 
-VirtualBox this feature seems to be broken, and the effects run very very 
-fast. I will implement a better mechanism based on the PC timer, when 
-the time permits.
-
 ## System requirements
 
 The code is really ancient 16-bit Assembly, but it makes use of some 
-32-bit instructions, eg. to accelerate copying display buffers. It also 
+32-bit instructions, e.g. to accelerate copying display buffers. It also 
 relies on the mathematical coprocessor.
 
-It seems that a 386DX PC with a VGA video card is required just to start. 
-I did the original development on a Pentium 133 Mhz PC, but I have never run 
-these effects on anything slower.
+A 386DX with a VGA video card should be good for a start. I did the original 
+development on a Pentium 133 Mhz system, but I have never run these effects 
+on anything slower.
 
 Regarding the memory, all effects use the tiny memory model, but allocate some 
 additional segments. 256 kB of free conventional memory should be enough.
