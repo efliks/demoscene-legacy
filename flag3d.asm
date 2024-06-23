@@ -34,6 +34,7 @@ org 100h
 
 
 entrypoint:
+
     call    alloc_seg
     or      ax, ax
     jz      quit_me
@@ -76,6 +77,8 @@ ip_loop2:
     finit
     call    init_sincos
 
+    call    timer_setup
+
     call    make_flag
     call    make_faces
 
@@ -117,7 +120,7 @@ main_loop:
 
     call    do_scroll
 
-    call    wait_for_vsync
+    call    timer_wait
     call    copy_buffer
     call    clear_buffer
 
@@ -136,6 +139,8 @@ skip_wave_change:
 
     mov     ax, 03h
     int     10h
+
+    call    timer_shutdown
 
     mov     ax, buffer_seg
     call    free_seg

@@ -12,6 +12,7 @@ org 100h
 
 
 entrypoint:
+
     call    do_startup
 
     call    alloc_seg
@@ -51,7 +52,7 @@ main_loop:
     mov     bx, dx
     call    lampa2
 
-    call    wait_for_vsync
+    call    timer_wait
     call    copy_buffer
     call    obrazek_scroll
 

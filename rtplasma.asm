@@ -10,6 +10,7 @@ org 100h
 
 
 entrypoint:
+
     call    do_startup
     call    generate_palette
     call    init_costable
@@ -19,7 +20,7 @@ entrypoint:
 
 progy_loop:
     call    plasma
-    call    wait_for_vsync
+    call    timer_wait
     call    copy_buffer
 
     mov     ah, 1h

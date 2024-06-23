@@ -12,6 +12,7 @@ org 100h
 
 
 entrypoint:
+
     call    do_startup
     call    inicjuj_palete
     call    inicjuj_punkty
@@ -21,7 +22,7 @@ petla:
     call    blur
 
     call    copy_buffer
-    call    wait_for_vsync
+    call    timer_wait
 
     inc     word ptr licznik
     cmp     word ptr licznik, 256

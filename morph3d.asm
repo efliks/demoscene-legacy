@@ -13,18 +13,8 @@ org 100h
 
 
 entrypoint:
-    finit
-    mov     ax, cs
-    mov     ds, ax
-    mov     es, ax
 
-    call    alloc_seg
-    or      ax, ax
-    jz      quit_me
-    mov     buffer_seg, ax
-
-    mov     ax, 13h
-    int     10h
+    call    do_startup
 
     call    make_random
     mov     si, offset model_object
@@ -107,20 +97,13 @@ m_continue:
 
     call    copy_buffer
     call    clear_buffer
-    call    wait_for_vsync
+    call    timer_wait
 
     in      al, 60h
     cmp     al, 1
     jne     main_loop
 
-    mov     ax, 03h
-    int     10h
-    mov     ax, buffer_seg
-    call    free_seg
-
-quit_me:
-    mov     ax, 4c00h
-    int     21h
+    call    do_shutdown
 
 
 draw_points proc

@@ -18,6 +18,7 @@ org 100h
 
 
 entrypoint:
+
     call    do_startup
 
       ; get pointer to system font
@@ -253,7 +254,7 @@ sscr_loop:
     pop     ds
     pop     es #
 
-    call    wait_for_vsync
+    call    timer_wait
     call    copy_buffer
 
     mov     ah, 1h

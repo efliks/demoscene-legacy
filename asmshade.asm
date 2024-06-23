@@ -54,6 +54,7 @@ entrypoint:
 
     call    init_envmap
 
+    call    timer_setup
 
     mov     ax, 13h
     int     10h
@@ -172,8 +173,10 @@ wf_skip:
     mov     al, TEXT_COLOR
     call    put_string
     jmp     flip_buffers
+
 no_full:
-    call    wait_for_vsync
+    call    timer_wait
+
 flip_buffers:
     call    copy_buffer
     call    clear_buffer
@@ -230,6 +233,8 @@ load_text2:
 quit_progy:
     mov     ax, 3h
     int     10h
+
+    call    timer_shutdown
 
     mov     ax, envmap_seg
     call    free_seg

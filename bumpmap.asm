@@ -12,6 +12,7 @@ org 100h
 
 
 entrypoint:
+
     call    do_startup
 
     call    alloc_seg
@@ -59,7 +60,7 @@ main_loop:
     add     way_pos_y, 1
     and     way_pos_y, 255
 
-    call    wait_for_vsync
+    call    timer_wait
     call    copy_buffer
 
     mov     ah, 1h

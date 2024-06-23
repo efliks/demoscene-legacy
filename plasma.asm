@@ -10,13 +10,14 @@ org 100h
 
 
 entrypoint:
+
     call    do_startup
     call    inicjuj_palete
     call    inicjuj_texture
 
 petla:
     call    rotacja_palety
-    call    wait_for_vsync
+    call    timer_wait
 
     mov     ah, 1h
     int     16h

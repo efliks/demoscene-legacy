@@ -13,6 +13,7 @@ org 100h
 
 
 entrypoint:
+
     call    do_startup
 
       ; invert palette
@@ -33,7 +34,7 @@ i_pal:
 main_loop:
     call    move_blobs
     call    make_frame
-    call    wait_for_vsync
+    call    timer_wait
     call    copy_buffer
 
     mov     ah, 1h

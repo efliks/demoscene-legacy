@@ -19,6 +19,7 @@ org 100h
 
 
 entrypoint:
+
     call    do_startup
 
     call    init_stars
@@ -26,7 +27,7 @@ entrypoint:
 
 main_loop:
     call    stars_main_proc
-    call    wait_for_vsync
+    call    timer_wait
     call    copy_buffer
     call    clear_buffer
 
