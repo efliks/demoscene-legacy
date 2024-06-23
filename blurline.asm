@@ -12,6 +12,7 @@ org 100h
 
 
 entrypoint:
+
     call    do_startup
     call    calc_way
 
@@ -77,7 +78,7 @@ main_loop:
     call    draw_line
 
     call    blur
-    call    wait_for_vsync
+    call    timer_wait
     call    copy_buffer
 
     inc     way_pos
@@ -91,7 +92,7 @@ key_hit:
     int     16h
 
     call    do_shutdown
-endp
+
 
 blur proc
     push    ds

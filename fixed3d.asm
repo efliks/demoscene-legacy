@@ -14,6 +14,7 @@ org 100h
 
 
 entrypoint:
+
     call    do_startup
     call    init_sin_cos
 
@@ -36,7 +37,7 @@ main_loop:
 
     call    draw_faces
 
-    call    wait_for_vsync
+    call    timer_wait
     call    copy_buffer
     call    clear_buffer
 

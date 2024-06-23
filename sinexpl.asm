@@ -19,6 +19,7 @@ org 100h
 
 
 entrypoint:
+
     call    do_startup
     call    init_sincos
     call    init_palette
@@ -36,7 +37,7 @@ c_next:
 
     call    move_points
     call    draw_points
-    call    wait_for_vsync
+    call    timer_wait
     call    blur
     call    copy_buffer
 

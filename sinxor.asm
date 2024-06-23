@@ -10,6 +10,7 @@ org 100h
 
 
 entrypoint:
+
     call    do_startup
 
       ; set texture
@@ -103,7 +104,7 @@ dp_hor:
     add     sin_pos, 2
     and     sin_pos, 511
 
-    call    wait_for_vsync
+    call    timer_wait
     call    copy_buffer
 
     mov     ah, 1h

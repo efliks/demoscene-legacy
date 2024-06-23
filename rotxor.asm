@@ -10,6 +10,7 @@ org 100h
 
 
 entrypoint:
+
     call    do_startup
 
       ; generate texture
@@ -190,7 +191,7 @@ draw_hor:
     mov     scale_const, ax
 ;------------------------------------------------------------
 
-    call    wait_for_vsync
+    call    timer_wait
     call    copy_buffer
 
     mov     ah, 1h

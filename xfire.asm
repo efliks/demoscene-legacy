@@ -12,6 +12,7 @@ org 100h
 
 
 entrypoint:
+
     call    do_startup
 
     mov     si, offset fire_pal
@@ -25,7 +26,7 @@ entrypoint:
 
 main_loop:
     call    burn
-    call    wait_for_vsync
+    call    timer_wait
     call    copy_buffer
     
     mov     ah, 1h

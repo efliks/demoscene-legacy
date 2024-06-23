@@ -14,6 +14,7 @@ org 100h
 
 
 entrypoint:
+
     call    do_startup
     call    init_palette
 
@@ -42,7 +43,7 @@ copy_object:
     call    draw_wireframe
 
     call    blur_screen
-    call    wait_for_vsync
+    call    timer_wait
     call    copy_buffer
 
     fld     angle_x
