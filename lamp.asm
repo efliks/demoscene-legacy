@@ -66,13 +66,10 @@ main_loop:
     and     ax, 255
     mov     word ptr kat_y, ax
 
-    mov     ah, 1h
-    int     16h
-    jnz     key_hit
-    jmp     main_loop
-key_hit:
-    xor     ah, ah
-    int     16h
+    mov     ah, 6h
+    mov     dl, 0ffh
+    int     21h
+    jz      main_loop
 
 koniec:
     mov     ax, obrazek_segment

@@ -67,9 +67,10 @@ copy_object:
     neg     oc_delta
 oc_next:
 
-    in      al, 60h
-    cmp     al, 1
-    jne     main_loop
+    mov     ah, 6h
+    mov     dl, 0ffh
+    int     21h
+    jz      main_loop
 
     call    do_shutdown
 

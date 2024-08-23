@@ -19,13 +19,10 @@ petla:
     call    rotacja_palety
     call    timer_wait
 
-    mov     ah, 1h
-    int     16h
-    jnz     key_hit
-    jmp     petla
-key_hit:
-    xor     ah, ah
-    int     16h
+    mov     ah, 6h
+    mov     dl, 0ffh
+    int     21h
+    jz      petla
 
     call    do_shutdown
 

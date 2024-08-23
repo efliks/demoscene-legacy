@@ -185,13 +185,10 @@ flip_buffers:
 
 
       ; read keyboard
-    mov     ah, 01h
-    int     16h
-    jnz     key_hit
-    jmp     main_loop
-key_hit:
-    xor     ah, ah
-    int     16h
+    mov     ah, 6h
+    mov     dl, 0ffh
+    int     21h
+    jz      main_loop
     cmp     al, 27  ; escape
     je      quit_progy
     cmp     al, 32  ; space

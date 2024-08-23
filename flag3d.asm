@@ -133,9 +133,10 @@ main_loop:
     inc     cosofs
 skip_wave_change:
 
-    in      al, 60h
-    dec     al
-    jnz     main_loop
+    mov     ah, 6h
+    mov     dl, 0ffh
+    int     21h
+    jz      main_loop
 
     mov     ax, 03h
     int     10h

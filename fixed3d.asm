@@ -45,9 +45,10 @@ main_loop:
     add     angle_y, 3
     add     angle_z, 1
 
-    in      al, 60h
-    cmp     al, 1
-    jne     main_loop
+    mov     ah, 6h
+    mov     dl, 0ffh
+    int     21h
+    jz      main_loop
 
     call    do_shutdown
 
