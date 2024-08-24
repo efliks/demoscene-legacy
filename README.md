@@ -25,9 +25,6 @@ To compile and run the graphical effects, there are many options. You can use
 a retro PC with DOS, a virtual machine running DOS, or a PC emulator such as 
 DOSBox or PCem.
 
-For my development purposes, I use a VirtualBox VM with Win98. I also have 
-a Pentium II system for testing the "final product".
-
 Secondly, you need some assembler. Back in the days, I used compilers
 from Borland. Luckily, they seem to have become abandonware.
 For example, here you can download 
@@ -54,18 +51,27 @@ It is possible to accelerate them to some degree by repeatedly
 pressing [ctrl + shift + f12], which will increase the number of "cycles" 
 in DOSBox.
 
+On a system with DOSIDLE installed, it may be necessary to 
+temporarily switch it off. Otherwise, the animation gets stuck after 
+a few seconds. To switch off DOSIDLE, use:
+
+```
+c:\legacy > c:\dosidle2\dosidle.exe -off
+```
+
 ## System requirements
 
 The code is really ancient 16-bit Assembly, but it makes use of some 
 32-bit instructions, e.g. to accelerate copying display buffers. It also 
 relies on the mathematical coprocessor.
 
-A 386DX with a VGA video card should be good for a start. I did the original 
-development on a Pentium 133 Mhz system, but I have never run these effects 
-on anything slower.
+The target platform was a Pentium 133 MHz with a VGA/PCI video card. To 
+measure the performance on slower systems, I configured several virtual PCs 
+with 86box, and did some benchmarks with *asmshade*. I recommend at least 
+a Pentium 100 MHz to have acceptable framerate.
 
-Regarding the memory, all effects use the tiny memory model, but allocate some 
-additional segments. 256 kB of free conventional memory should be enough.
+All effects use the tiny memory model, but allocate additional segments. 
+256 kB of free conventional memory should be enough.
 
 ## Final notes
 
