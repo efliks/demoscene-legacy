@@ -9,6 +9,7 @@ STAR struc
    y dw ?
    z dw ?
    c db ?
+   clear_me dw ?
 ends
 
 .model tiny
@@ -24,23 +25,12 @@ entrypoint:
 
     call    init_stars
     call    init_palette
-
-main_loop:
-    call    stars_main_proc
-    call    timer_wait
-    call    copy_buffer
     call    clear_buffer
 
-    mov     ah, 6h
-    mov     dl, 0ffh
-    int     21h
-    jz      main_loop
-
-    call    do_shutdown
-
-stars_main_proc proc
+main_loop:
     push    es
     mov     es, buffer_seg
+
     mov     si, offset stars_table
     mov     cx, MAX_STARS
 smp_loop:
@@ -73,8 +63,10 @@ smp_loop:
     mov     di, ax
     shl     di, 6
     shl     ax, 8
-    add     di, ax
-    add     di, bx
+    add     ax, di
+    add     ax, bx
+    mov     di, ax
+    mov     word ptr [si.clear_me], ax
 
     dec     word ptr [si].z
 
@@ -101,8 +93,30 @@ smp_next:
     dec     cx
     jnz     smp_loop
     pop     es
-    ret
-endp
+
+    call    timer_wait
+    call    copy_buffer
+
+    push    es
+    mov     es, word ptr [buffer_seg]
+    mov     si, offset stars_table
+    mov     cx, MAX_STARS
+    xor     ax, ax
+erase_stars:
+    mov     di, word ptr [si.clear_me]
+    stosw
+    add     di, 320 - 2
+    stosw
+    add     si, type STAR
+    loop    erase_stars
+    pop     es
+
+    mov     ah, 6h
+    mov     dl, 0ffh
+    int     21h
+    jz      main_loop
+
+    call    do_shutdown
 
 init_stars proc
     mov     si, offset stars_table

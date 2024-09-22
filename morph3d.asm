@@ -24,19 +24,9 @@ entrypoint:
     rep     movsd
 
     call    make_circle
-    call    init_font
+    call    clear_buffer
 
 main_loop:
-    mov     si, offset text1
-    mov     al, 21
-    mov     cx, 160-(21*8)/2
-    xor     dx, dx
-    call    put_string
-    mov     si, offset text2
-    mov     al, 21
-    mov     cx, 160-(12*8)/2
-    mov     dx, 191
-    call    put_string
 
     inc     morph_counter
     cmp     morph_counter, 600
@@ -83,8 +73,6 @@ m_continue:
     mov     cx, MAX_POINTS
     call    translate_points
 
-    call    draw_points
-
     fld     angle_x
     fadd    inc_angle
     fstp    angle_x
@@ -95,19 +83,6 @@ m_continue:
     fadd    inc_angle
     fstp    angle_z
 
-    call    copy_buffer
-    call    clear_buffer
-    call    timer_wait
-
-    mov     ah, 6h
-    mov     dl, 0ffh
-    int     21h
-    jz      main_loop
-
-    call    do_shutdown
-
-
-draw_points proc
     push    es
     mov     es, buffer_seg
 
@@ -132,6 +107,13 @@ dp_loop:
     shl     di, 8
     add     bx, di
     add     bx, ax
+    push    bx
+    mov     ax, bx
+    mov     bx, MAX_POINTS
+    sub     bx, cx
+    shl     bx, 1
+    mov     word ptr saved_offsets[bx], ax
+    pop     bx
 
     mov     word ptr es:[bx], dx
     mov     word ptr es:[bx+320], dx
@@ -140,8 +122,30 @@ dp_next:
     dec     cx
     jnz     dp_loop
     pop     es
-    ret
-endp
+
+    call    copy_buffer
+    call    timer_wait
+
+    push    es
+    mov     es, word ptr [buffer_seg]
+    mov     si, offset saved_offsets
+    mov     cx, MAX_POINTS
+erase_points:
+    lodsw
+    mov     di, ax
+    xor     ax, ax
+    stosw
+    add     di, 320 - 2
+    stosw
+    loop    erase_points
+    pop     es
+
+    mov     ah, 6h
+    mov     dl, 0ffh
+    int     21h
+    jz      main_loop
+
+    call    do_shutdown
 
 morph_object proc
     push    bp
@@ -363,9 +367,6 @@ endp
 
 .data
 
-text1 db '3D MORPHING BY EFLIKS', 0
-text2 db 'ASM NOT DEAD!', 0
-
 morph_counter dw 0
 morph_number dw 0
 
@@ -396,5 +397,7 @@ current_object dd MAX_POINTS dup(?, ?, ?)
 rotated_object dd MAX_POINTS dup(?, ?, ?)
 
 coord2d dw MAX_POINTS dup(?, ?)
+
+saved_offsets dw MAX_POINTS dup(?)
 
 end entrypoint
