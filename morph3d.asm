@@ -16,6 +16,21 @@ entrypoint:
 
     call    do_startup
 
+    mov     dx, 03c8h
+    xor     ax, ax
+    out     dx, al
+    inc     dx
+    mov     cx, 256
+do_palette:
+    out     dx, al
+    out     dx, al
+    out     dx, al
+    inc     ah
+    mov     al, ah
+    shr     al, 2
+    dec     cx
+    jnz     do_palette
+
     call    make_random
     mov     si, offset model_object
     mov     di, offset current_object
@@ -88,7 +103,6 @@ m_continue:
 
     mov     si, offset coord2d
     mov     cx, MAX_POINTS
-    mov     dx, 1f1fh  ; dl = 31d,  dh = 31d
 dp_loop:
     mov     bx, word ptr [si+2]
     cmp     bx, 0
@@ -111,12 +125,36 @@ dp_loop:
     mov     ax, bx
     mov     bx, MAX_POINTS
     sub     bx, cx
+    push    bx
     shl     bx, 1
     mov     word ptr saved_offsets[bx], ax
+
+    pop     bx
+    mov     ax, bx
+    shl     ax, 2
+    shl     bx, 3
+    add     bx, ax
+    fld     dword ptr rotated_object[bx+8]
+    fadd    dword ptr [color_add]
+    fmul    dword ptr [color_scale]
+    fistp   dword ptr [color_dump]
+
+    mov     eax, 255
+    sub     eax, dword ptr [color_dump]
+    cmp     eax, 0
+    jge     color_check
+    xor     eax, eax
+    jmp     color_done
+color_check:
+    cmp     eax, 255
+    jbe     color_done
+    mov     eax, 255
+color_done:
+    mov     ah, al
     pop     bx
 
-    mov     word ptr es:[bx], dx
-    mov     word ptr es:[bx+320], dx
+    mov     word ptr es:[bx], ax
+    mov     word ptr es:[bx+320], ax
 dp_next:
     add     si, 4
     dec     cx
@@ -375,18 +413,22 @@ angle_y dd 0.0
 angle_z dd 0.0
 
 inc_angle dd 0.0174533
-delta_coord dd 0.4
+delta_coord dd 0.5
 
-circle_radius dd 75.0
+circle_radius dd 85.0
 circle_inc_angle dd 0.100530965  ; 360/MAX_POINTS*2*PI/180
 
-spiral_radius dd 20.0
+spiral_radius dd 25.0
 spiral_start_z dd -125.0
 spiral_inc_z dd 2.0
 spiral_inc_angle dd 0.628319  ; 0.0628319*10
 
-cube_inc_coord dd 20.0
-cube_start_coord dd -40.0
+cube_inc_coord dd 25.0
+cube_start_coord dd -50.0
+
+color_add dd 125.0
+color_scale dd 1.024 ; 256 / (2 * 125)
+color_dump dd ?
 
 .data?
 
