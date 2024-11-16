@@ -2,7 +2,7 @@
 
 include sys.inc
 
-MAX_STARS equ 400
+MAX_STARS equ 300
 
 STAR struc
    x dw ?
@@ -23,8 +23,49 @@ entrypoint:
 
     call    do_startup
 
-    call    init_stars
-    call    init_palette
+    mov     si, offset stars_table
+    mov     cx, MAX_STARS
+is_loop:
+    push    word ptr 160
+    push    word ptr -160
+    call    random
+    mov     word ptr [si].x, ax
+
+    push    word ptr -100
+    push    word ptr 100
+    call    random
+    mov     word ptr [si].y, ax
+
+    push    word ptr 100
+    push    word ptr -100
+    call    random
+    mov     word ptr [si].z, ax
+
+    push    word ptr 255
+    push    word ptr 0
+    call    random
+    mov     byte ptr [si].c, al
+
+    add     si, type STAR
+    dec     cx
+    jnz     is_loop
+
+; initialize palette
+    mov     dx, 03c8h
+    xor     ax, ax
+    out     dx, al
+    inc     dx
+    mov     cx, 256
+ip_loop:
+    out     dx, al
+    out     dx, al
+    out     dx, al
+    inc     ah
+    mov     al, ah
+    shr     al, 2
+    dec     cx
+    jnz     ip_loop
+
     call    clear_buffer
 
 main_loop:
@@ -117,54 +158,6 @@ erase_stars:
     jz      main_loop
 
     call    do_shutdown
-
-init_stars proc
-    mov     si, offset stars_table
-    mov     cx, MAX_STARS
-is_loop:
-    push    word ptr 160
-    push    word ptr -160
-    call    random
-    mov     word ptr [si].x, ax
-
-    push    word ptr -100
-    push    word ptr 100
-    call    random
-    mov     word ptr [si].y, ax
-
-    push    word ptr 100
-    push    word ptr -100
-    call    random
-    mov     word ptr [si].z, ax
-
-    push    word ptr 255
-    push    word ptr 0
-    call    random
-    mov     byte ptr [si].c, al
-
-    add     si, type STAR
-    dec     cx
-    jnz     is_loop
-    ret
-endp
-
-init_palette proc
-    mov     dx, 03c8h
-    xor     ax, ax
-    out     dx, al
-    inc     dx
-    mov     cx, 256
-ip_loop:
-    out     dx, al
-    out     dx, al
-    out     dx, al
-    inc     ah
-    mov     al, ah
-    shr     al, 2
-    dec     cx
-    jnz     ip_loop
-    ret
-endp
 
 random proc                  ; +4 min,  +6 max
     push    bp
